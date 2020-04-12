@@ -1,31 +1,53 @@
+"""
+original_phrases = ['Have A Nice Day', 'We Are Having Fun', 'You Can Win', 'Keep Going Forward', 'Be Grateful']
+self.current_phrase = self.original_phrases[int(random.randint(0, len(self.original_phrases)))]
+
+"""
 import random
 
+from .phrase import Phrase
 
-from phrase import Phrase
 
 class Game:
 	life = 5
 	underscores = []
+	stored_phrases = ['Have A Nice Day', 'We Are Having Fun', 'You Can Win', 'Keep Going Forward', 'Be Grateful']
+	current_phrase = stored_phrases[int(random.randint(0, len(stored_phrases) - 1))]
 
 	def __init__(self, phrases):
 		self.phrases = phrases
 		self.input_phrase = Phrase(self.phrases)
-		self.stored_phrases = ['Have a Nice Day', 'We Are Having Fun', 'You Can Win', 'Keep Going Forward', 'Be Grateful']
-		self.current_phrase = self.stored_phrases[int(random.randint(0, len(self.phrases) -1 ))]
 
-	def create_board(self):
+		print('Current Phrase = ' + self.current_phrase)
+
+	def create_board(self, needed_phrase):
+		array = self.current_phrase.split(' ')
+
 		for i in array:
-			new_element = '_ ' * len(i)
-			new_element = new_element[0:-1]
+			new_element = ''
+			for j in i:
+				if needed_phrase != "0" and (j.lower() == needed_phrase or j == needed_phrase.upper()):
+					new_element += j + ' '
+
+				else:
+					new_element += '_ '
+
 			self.underscores.append(new_element)
 
 	def print_board(self):
-		array = self.current_phrase.split(' ')
+
+		if self.input_phrase.check_possibility() is True:
+			true_phrase = self.input_phrase.phrase
+			self.create_board(true_phrase)
 
 		current_board = ''
-		for j in self.underscores:
-			current_board += j + ' '
+		for i in self.underscores:
+			current_board += i + '  '
+		return current_board
 
-		return self.underscores
-game1 = Game('b')
-print(game1.print_board())
+	def run_game(self):
+		print(self.print_board() + '\n')
+		while self.life > 0:
+			user_input = input('Enter Your Guess: ')
+			self.__init__(user_input)
+			print(self.print_board() + '\n')
