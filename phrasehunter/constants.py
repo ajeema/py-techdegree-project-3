@@ -1,0 +1,1 @@
+STORED_PHRASES = {'Have a nice day', 'Welcome to the new world', 'Be grateful', 'Learn and Grow'}

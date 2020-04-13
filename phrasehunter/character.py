@@ -5,8 +5,8 @@ class Character:
     is_number = False
 
     def __init__(self, char):
-        char = char.upper()
-        for i in str(char):
+        self.char = char.upper()
+        for i in str(self.char):
             if i in self.numbers:
                 self.is_number = True
             else:
@@ -15,11 +15,19 @@ class Character:
             raise ValueError('Please enter a string not a number')
 
         else:
-            if len(char) == 1:
-                if char in self.guessed_list:
+            if len(self.char) == 1:
+                if self.char in self.guessed_list:
                     self.was_guessed = True
                 else:
                     self.char = char
                     self.guessed_list.append(self.char)
             else:
                 raise ValueError('Please Enter One String At A Time!!!!')
+
+    def show_single_character(self):
+        string = ' {}'
+        if self.was_guessed:
+            string.format(self.char)
+        else:
+            string.format('_')
+        return string
