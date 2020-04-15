@@ -1,33 +1,17 @@
 class Character:
-    guessed_list = []
-    was_guessed = False
-    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    is_number = False
-
-    def __init__(self, char):
+    def __init__(self, char, was_guessed = False):
         self.char = char.upper()
-        for i in str(self.char):
-            if i in self.numbers:
-                self.is_number = True
-            else:
-                continue
-        if self.is_number is True:
-            raise ValueError('Please enter a string not a number')
+        self.was_guessed = was_guessed
 
-        else:
-            if len(self.char) == 1:
-                if self.char in self.guessed_list:
-                    self.was_guessed = True
-                else:
-                    self.char = char
-                    self.guessed_list.append(self.char)
-            else:
-                raise ValueError('Please Enter One String At A Time!!!!')
+    def update_guessed(self, guess):
+        if self.was_guessed == False and guess == self.char:
+            self.was_guessed = True
 
     def show_single_character(self):
-        string = ' {}'
-        if self.was_guessed:
-            string.format(self.char)
+        tile = '{}'
+        if self.was_guessed == True:
+            return tile.format(self.char)
+        elif self.char == ' ':
+            return tile.format(' ')
         else:
-            string.format('_')
-        return string
+            return tile.format('_')

@@ -1,1 +1,1 @@
-STORED_PHRASES = {'Have a nice day', 'Welcome to the new world', 'Be grateful', 'Learn and Grow'}
+stored_phrases=['Have A Nice Day','Welcome To The New World','Be Grateful','Learn And Grow']

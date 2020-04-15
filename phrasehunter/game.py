@@ -1,117 +1,101 @@
-"""
-original_phrases = ['Have A Nice Day', 'We Are Having Fun', 'You Can Win', 'Keep Going Forward', 'Be Grateful']
-self.current_phrase = self.original_phrases[int(random.randint(0, len(self.original_phrases)))]
-
-"""
-import random
-
 from .phrase import Phrase
-
+import random
+import os
 
 class Game:
 
 	def __init__(self, phrases):
 		self.game_on = True
-		self.phrases = [Phrase(phrases) for phrases in phrases]
-		self.life = 5
+		self.phrases = [Phrase(phrase) for phrase in phrases]
+		self.guessed_phrases_index = []
+
+	def fetch_guess(self, user_input):
+
+		correct_guess = False
+
+		self.cls()
+		if len(user_input) > 1:
+			print("Please input single character only")
+		elif not user_input.isalpha() and not user_input == " ":
+			print("Please Input Only Alphabets")
+		elif user_input in self.guessed_char:
+			print(f"You Have Already Tried {user_input}")
+		elif not self.active_phrase.exists(user_input):
+			print(f"We Couldn't Find {user_input} in The Phrase")
+			self.life -= 1
+			self.guessed_char.append(user_input)
+		else:
+			self.active_phrase.check_guess(user_input)
+			self.guessed_char.append(user_input)
+			correct_guess = True
+		return correct_guess
 
 	def current_phrase_picker(self):
-		self.current_phrase = self.phrases[random.randint(0, len(self.phrases))]
+		self.has_space = False
+		self.current_index = random.randint(0, len(self.phrases) - 1)
+		if len(self.guessed_phrases_index) == len(self.phrases):
+			self.guessed_phrases_index = [] # Clearing The Guessed Array If Both Lengths are Same
+			for phrase in self.phrases:
+				phrase.phrase_again()
+		else:
+			while self.current_index in self.guessed_phrases_index:
+				current_index = random.randint(0, len(self.phrases) - 1)
+		self.life = 5
+		self.guessed_char = []
+		self.active_phrase = self.phrases[self.current_index]
+		if ' ' in self.active_phrase.phrase_:
+			self.has_space = True
+
+	def cls(self):
+		os.system('cls' if os.name == 'nt' else 'clear')
+
 
 	def run_game(self):
-		c = 0
+		self.cls()
 		while self.game_on:
-			print("This is the Phrase Hunter Game!! Try Guessing the Phrase!!")
-			while self.life < 5:
-				c += 1
-				self.current_phrase.show_guessed_phrase()
-			self.game_on = False
+			print("This Is The Phrase Hunter Game!! Try Guessing The Phrase!!!")
+			self.current_phrase_picker()
 
+			while self.life:
+				self.active_phrase.show_guessed_phrase()
+				print(f"Lives Remaining: {self.life}")
+				user_input = input("Guess One Character: ").upper()
+				if self.has_space:
+					correct_guess = self.fetch_guess(' ')
+					correct_guess = self.fetch_guess(user_input)
+				else:
+					correct_guess = self.fetch_guess(user_input)
+				if correct_guess:
+					if self.active_phrase.entire_guessed():
+						self.cls()
+						print('Congrats!! You Won The Game!! You Were Able To Guess Whole Phrase...')
+						self.active_phrase.show_guessed_phrase()
+						self.guessed_phrases_index.append(self.current_index)
+						if self.restart_game() == False:
+							break
+							break
 
+				elif not self.life:
+					self.cls()
+					print("Sorry, you ran out of guesses")
+					self.active_phrase.show_guessed_phrase()
+					self.restart_game()
+				else:
+					continue
 
+	def restart_game(self):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-# class Game:
-# 	life = 5
-# 	underscores = []
-# 	stored_phrases = ['Have A Nice Day', 'We Are Having Fun', 'You Can Win', 'Keep Going Forward', 'Be Grateful']
-# 	current_phrase = stored_phrases[int(random.randint(0, len(stored_phrases) - 1))]
-#
-# 	def __init__(self, phrases):
-# 		self.phrases = phrases
-# 		self.input_phrase = Phrase(self.phrases)
-#
-# 		print('Current Phrase = ' + self.current_phrase)
-#
-# 	def create_board(self, needed_phrase):
-# 		array = self.current_phrase.split(' ')
-#
-# 		for i in array:
-# 			new_element = ''
-# 			for j in i:
-# 				if needed_phrase != "0" and (j.lower() == needed_phrase or j == needed_phrase.upper()):
-# 					new_element += j + ' '
-#
-# 				else:
-# 					new_element += '_ '
-#
-# 			self.underscores.append(new_element)
-#
-# 	def print_board(self):
-#
-# 		if self.input_phrase.check_possibility() is True:
-# 			true_phrase = self.input_phrase.phrase
-# 			self.create_board(true_phrase)
-#
-# 		current_board = ''
-# 		for i in self.underscores:
-# 			current_board += i + '  '
-# 		return current_board
-#
-# 	def run_game(self):
-# 		print(self.print_board() + '\n')
-# 		while self.life > 0:
-# 			user_input = input('Enter Your Guess: ')
-# 			# TODO make it only take a life if that letter has not been guessed or incorrect.
-# 			self.life -= 1
-#
-# 			self.__init__(user_input)
-# 			print(self.print_board() + '\n')
-# 			print(f"you have {self.life} out of 5 lives left")
-# 			print('''You have guessed these letters: ''',
-# 				  Character.guessed_list)
+		while True:
+			select_option = input("Do You Like To Play This Game Again? [Y/N] : ")
+			if select_option.upper() == 'Y':
+				self.cls()
+				self.current_phrase_picker()
+				break
+			elif select_option.upper() == 'N':
+				self.game_on = False
+				print("Thanks For Playing!!")
+				return False
+			else:
+				self.cls()
+				print("Sorry! I didn't understand it, please type Y for Playing Again and N for Ending the Game!!")
+				continue
