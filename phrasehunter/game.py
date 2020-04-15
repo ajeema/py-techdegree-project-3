@@ -2,6 +2,7 @@ from .phrase import Phrase
 import random
 import os
 
+from .artwork import *
 class Game:
 
 	def __init__(self, phrases):
@@ -23,6 +24,14 @@ class Game:
 		elif not self.active_phrase.exists(user_input):
 			print(f"We Couldn't Find {user_input} in The Phrase")
 			self.life -= 1
+			if self.life == 4:
+				four_lives_left()
+			elif self.life == 3:
+				three_lives_left()
+			elif self.life == 2:
+				two_lives_left()
+			elif self.life == 1:
+				one_life_left()
 			self.guessed_char.append(user_input)
 		else:
 			self.active_phrase.check_guess(user_input)
@@ -77,7 +86,9 @@ class Game:
 
 				elif not self.life:
 					self.cls()
-					print("Sorry, you ran out of guesses")
+					print("Sorry Cap'n, you're dead!")
+					dead()
+
 					self.active_phrase.show_guessed_phrase()
 					self.restart_game()
 				else:
@@ -86,7 +97,8 @@ class Game:
 	def restart_game(self):
 
 		while True:
-			select_option = input("Do You Like To Play This Game Again? [Y/N] : ")
+			print(f"The phrase was: {self.active_phrase.phrase_}")
+			select_option = input("Would You Like To Play Again? [Y/N] : ")
 			if select_option.upper() == 'Y':
 				self.cls()
 				self.current_phrase_picker()
@@ -97,5 +109,5 @@ class Game:
 				return False
 			else:
 				self.cls()
-				print("Sorry! I didn't understand it, please type Y for Playing Again and N for Ending the Game!!")
+				print("Sorry! Please type Y to play again or N to quit")
 				continue
