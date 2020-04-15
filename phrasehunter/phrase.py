@@ -1,8 +1,8 @@
 from .character import Character
 
-#import random
 
 class Phrase:
+	"""Phrase class responible for knowing if/when the entire phrase has been guessed"""
 	current_letter_index = []
 
 	def __init__(self, phrase):

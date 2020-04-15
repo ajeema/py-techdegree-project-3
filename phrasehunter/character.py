@@ -1,4 +1,5 @@
 class Character:
+    """Responsible for holding the state of a char (guessed character)"""
     def __init__(self, char, was_guessed = False):
         self.char = char.upper()
         self.was_guessed = was_guessed

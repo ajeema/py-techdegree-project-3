@@ -1,17 +1,20 @@
-from .phrase import Phrase
 import random
 import os
 
+from .phrase import Phrase
 from .artwork import *
+
+
 class Game:
+	"""The primary logic for the game"""
 
 	def __init__(self, phrases):
 		self.game_on = True
 		self.phrases = [Phrase(phrase) for phrase in phrases]
 		self.guessed_phrases_index = []
 
+	# Make sure the user inputs valid options
 	def fetch_guess(self, user_input):
-
 		correct_guess = False
 
 		self.cls()
@@ -23,6 +26,8 @@ class Game:
 			print(f"You Have Already Tried {user_input}")
 		elif not self.active_phrase.exists(user_input):
 			print(f"We Couldn't Find {user_input} in The Phrase")
+
+			# Show artwork depending on lives left
 			self.life -= 1
 			if self.life == 4:
 				four_lives_left()
@@ -39,16 +44,19 @@ class Game:
 			correct_guess = True
 		return correct_guess
 
+	# Randomlu select a phrase for play
 	def current_phrase_picker(self):
 		self.has_space = False
 		self.current_index = random.randint(0, len(self.phrases) - 1)
 		if len(self.guessed_phrases_index) == len(self.phrases):
-			self.guessed_phrases_index = [] # Clearing The Guessed Array If Both Lengths are Same
+
+			# Clearing The Guessed Array If Both Lengths are Same
+			self.guessed_phrases_index = []
 			for phrase in self.phrases:
 				phrase.phrase_again()
 		else:
 			while self.current_index in self.guessed_phrases_index:
-				current_index = random.randint(0, len(self.phrases) - 1)
+				self.current_index = random.randint(0, len(self.phrases) - 1)
 		self.life = 5
 		self.guessed_char = []
 		self.active_phrase = self.phrases[self.current_index]
@@ -70,6 +78,7 @@ class Game:
 				print(f"Lives Remaining: {self.life}")
 				user_input = input("Guess One Character: ").upper()
 				if self.has_space:
+					# excuses white space so the user doesn't need to guess it
 					correct_guess = self.fetch_guess(' ')
 					correct_guess = self.fetch_guess(user_input)
 				else:
@@ -80,14 +89,15 @@ class Game:
 						print('Congrats!! You Won The Game!! You Were Able To Guess Whole Phrase...')
 						self.active_phrase.show_guessed_phrase()
 						self.guessed_phrases_index.append(self.current_index)
+						# TODO - shouldn't use 4+ if's but it works for now...
 						if self.restart_game() == False:
-							break
 							break
 
 				elif not self.life:
 					self.cls()
 					print("Sorry Cap'n, you're dead!")
 					dead()
+					print(f"The phrase was: {self.active_phrase.phrase_}")
 
 					self.active_phrase.show_guessed_phrase()
 					self.restart_game()
@@ -97,7 +107,7 @@ class Game:
 	def restart_game(self):
 
 		while True:
-			print(f"The phrase was: {self.active_phrase.phrase_}")
+
 			select_option = input("Would You Like To Play Again? [Y/N] : ")
 			if select_option.upper() == 'Y':
 				self.cls()
@@ -110,4 +120,3 @@ class Game:
 			else:
 				self.cls()
 				print("Sorry! Please type Y to play again or N to quit")
-				continue
