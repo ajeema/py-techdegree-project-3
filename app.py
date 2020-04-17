@@ -8,4 +8,3 @@ if __name__ == '__main__':
 		game.run_game()
 	except KeyboardInterrupt:
 		print("\nThanks for playing!")
-	#game.run_game()

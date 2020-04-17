@@ -19,9 +19,9 @@ class Game:
 
 		self.cls()
 		if len(user_input) > 1:
-			print("Please input single character only")
+			print("Please input a single character only")
 		elif not user_input.isalpha() and not user_input == " ":
-			print("Please Input Only Alphabets")
+			print("Please Input Only letters")
 		elif user_input in self.guessed_char:
 			print(f"You Have Already Tried {user_input}")
 		elif not self.active_phrase.exists(user_input):
@@ -44,7 +44,7 @@ class Game:
 			correct_guess = True
 		return correct_guess
 
-	# Randomlu select a phrase for play
+	# Randomly select a phrase for play
 	def current_phrase_picker(self):
 		self.has_space = False
 		self.current_index = random.randint(0, len(self.phrases) - 1)
